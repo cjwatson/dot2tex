@@ -789,16 +789,16 @@ class Dot2TikZConv(Dot2PGFConv):
             # Quick and dirty introduction of handling for xlabel
             # xlabel = self.get_label(node, label_attribute="xlabel")
             xlabel = None
-            if 'xlabel' in node.attr:
-                #node.attr['texlbl'] = node.attr['xlabel']
-                node.attr['texlbl'] = None
-                xlabel = self.get_label(node,label_attribute="xlabel")
+            if 'xlabel' in node.attr or 'texxlbl' in node.attr:
+                xlabel = self.get_label(node, label_attribute="xlabel", tex_label_attribute="texxlbl")
             #xlabel = node.attr['xlabel'] if 'xlabel' in node.attr else None
             if xlabel is not None:
                 #xlpos = "%sbp,%sbp" % (smart_float(str(float(x)+len(xlabel)*5)), smart_float(y))
                 xlp = getattr(node, 'xlp', None)
                 if not xlp:
-                    continue
+                    # The input file had texxlbl, but had no xlabel,
+                    # so graphviz didn't generate xlp
+                    xlp = x + ',' + 'y'
                 xlpx, xlpy = xlp.split(',')
                 xlpx = str(abs(float(x)-float(xlpx))+float(x))
                 xlpy = y
