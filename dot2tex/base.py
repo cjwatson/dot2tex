@@ -755,7 +755,7 @@ class DotConvBase(object):
 
         if getattr(drawobj, tex_label_attribute, ''):
             # the texlbl overrides everything
-            text = drawobj.texlbl
+            text = getattr(drawobj, tex_label_attribute)
         elif texmode == 'verbatim':
             # verbatim mode
             text = escape_texchars(text)
