@@ -655,7 +655,7 @@ class DotNode(object):
 
         Input:
             name - name of node. Have to be a string
-            **kwds node attributes
+            ``**kwds`` node attributes
 
         """
         self.name = name
