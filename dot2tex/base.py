@@ -325,7 +325,7 @@ class DotConvBase(object):
         # Is the format RBG(A)?
         if drawopcolor.startswith('#'):
             t = list(chunks(drawopcolor[1:], 2))
-            # parallell lines not yet supported
+            # parallel lines not yet supported
             if len(t) > 6:
                 t = t[0:3]
             rgb = [(round((int(n, 16) / 255.0), 2)) for n in t]
@@ -362,7 +362,7 @@ class DotConvBase(object):
         return self.do_draw_op(drawoperations, drawobj, stat, texlbl_name, use_drawstring_pos)
 
     def do_draw_op(self, drawoperations, drawobj, stat, texlbl_name="texlbl", use_drawstring_pos=False):
-        """Excecute the operations in drawoperations"""
+        """Execute the operations in drawoperations"""
         s = ""
         for drawop in drawoperations:
             op = drawop[0]
@@ -1014,7 +1014,7 @@ class TeXDimProc:
             log.warning('No labels to preprocess')
             return True
         self.tempdir = tempfile.mkdtemp(prefix='dot2tex')
-        log.debug('Creating temporary directroy %s' % self.tempdir)
+        log.debug('Creating temporary directory %s' % self.tempdir)
         self.tempfilename = os.path.join(self.tempdir, 'dot2tex.tex')
         log.debug('Creating temporary file %s' % self.tempfilename)
         s = ""

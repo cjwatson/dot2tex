@@ -318,7 +318,7 @@ class Dot2PGFConv(DotConvBase):
 
     def draw_text(self, drawop, style=None):
         # The coordinates given by drawop are not the same as the node
-        # coordinates! This may give som odd results if graphviz' and
+        # coordinates! This may give some odd results if graphviz' and
         # LaTeX' fonts are very different.
         if len(drawop) == 7:
             c, x, y, align, w, text, valign = drawop

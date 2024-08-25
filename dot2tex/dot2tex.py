@@ -172,7 +172,7 @@ def create_options_parser():
     parser.add_argument(
         '--valignmode', dest='valignmode', default='center',
         choices=('center', 'dot'),
-        help='Set vertical alginment mode  (center, dot).'
+        help='Set vertical alignment mode  (center, dot).'
     )
     parser.add_argument(
         '--nominsize', dest='nominsize', action='store_true',
@@ -280,7 +280,7 @@ def main(run_as_module=False, dotdata=None, options=None):
         sys.exit(0)
 
     if options.debug:
-        # initalize log handler
+        # initialize log handler
         if run_as_module:
             pass
         else:
@@ -418,7 +418,7 @@ def main(run_as_module=False, dotdata=None, options=None):
             parser = create_options_parser()
         options = parser.parse_args(extraoptions[0].split(), options)
         if options.debug and nodebug:
-            # initalize log handler
+            # initialize log handler
             if not run_as_module:
                 hdlr = logging.FileHandler('dot2tex.log')
                 log.addHandler(hdlr)
