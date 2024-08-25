@@ -173,9 +173,9 @@ class Dot2PGFConv(DotConvBase):
                            bold='very thick', filled='fill', invis="",
                            rounded='rounded corners', )
         self.dashstyles = dict(
-            dashed='\pgfsetdash{{3pt}{3pt}}{0pt}',
-            dotted='\pgfsetdash{{\pgflinewidth}{2pt}}{0pt}',
-            bold='\pgfsetlinewidth{1.2pt}')
+            dashed=r'\pgfsetdash{{3pt}{3pt}}{0pt}',
+            dotted=r'\pgfsetdash{{\pgflinewidth}{2pt}}{0pt}',
+            bold=r'\pgfsetlinewidth{1.2pt}')
 
     def start_node(self, node):
         # Todo: Should find a more elegant solution
@@ -223,9 +223,9 @@ class Dot2PGFConv(DotConvBase):
                 self.fillcolor = color
                 if ccolor.startswith('{'):
                     # rgb or hsb
-                    s += "  \definecolor{newcol}%s\n" % ccolor
+                    s += r"  \definecolor{newcol}%s\n" % ccolor
                     ccolor = 'newcol'
-                s += "  \pgfsetcolor{%s}\n" % ccolor
+                s += r"  \pgfsetcolor{%s}\n" % ccolor
         elif c == 'c':
             # set pen color
             if self.pencolor != color:
@@ -233,9 +233,9 @@ class Dot2PGFConv(DotConvBase):
                 self.color = ''
                 if ccolor.startswith('{'):
                     # rgb or hsb
-                    s += "  \definecolor{strokecol}%s\n" % ccolor
+                    s += r"  \definecolor{strokecol}%s\n" % ccolor
                     ccolor = 'strokecol'
-                s += "  \pgfsetstrokecolor{%s}\n" % ccolor
+                s += r"  \pgfsetstrokecolor{%s}\n" % ccolor
             else:
                 return ""
         elif c == 'C':
@@ -245,9 +245,9 @@ class Dot2PGFConv(DotConvBase):
                 self.color = ''
                 if ccolor.startswith('{'):
                     # rgb
-                    s += "  \definecolor{fillcol}%s\n" % ccolor
+                    s += r"  \definecolor{fillcol}%s\n" % ccolor
                     ccolor = 'fillcol'
-                s += "  \pgfsetfillcolor{%s}\n" % ccolor
+                s += r"  \pgfsetfillcolor{%s}\n" % ccolor
                 if not opacity is None:
                     self.opacity = opacity
                     # Todo: The opacity should probably be set directly when drawing
@@ -291,7 +291,7 @@ class Dot2PGFConv(DotConvBase):
             stylestr = " [%s]" % style
         else:
             stylestr = ''
-        s += "  \%s%s (%sbp,%sbp) ellipse (%sbp and %sbp);\n" % (cmd, stylestr, smart_float(x), smart_float(y),
+        s += r"  \%s%s (%sbp,%sbp) ellipse (%sbp and %sbp);\n" % (cmd, stylestr, smart_float(x), smart_float(y),
                                                                  # w+self.linewidth,h+self.linewidth)
                                                                  smart_float(w), smart_float(h))
         return s
@@ -307,14 +307,14 @@ class Dot2PGFConv(DotConvBase):
             stylestr = " [%s]" % style
         else:
             stylestr = ''
-        s = "  \%s%s %s -- cycle;\n" % (cmd, stylestr, " -- ".join(pp))
+        s = r"  \%s%s %s -- cycle;\n" % (cmd, stylestr, " -- ".join(pp))
         return s
 
     def draw_polyline(self, drawop, style=None):
         op, points = drawop
         pp = ['(%sbp,%sbp)' % (smart_float(p[0]), smart_float(p[1])) for p in points]
         stylestr = ''
-        return "  \draw%s %s;\n" % (stylestr, " -- ".join(pp))
+        return r"  \draw%s %s;\n" % (stylestr, " -- ".join(pp))
 
     def draw_text(self, drawop, style=None):
         # The coordinates given by drawop are not the same as the node
@@ -337,7 +337,7 @@ class Dot2PGFConv(DotConvBase):
         lblstyle = ",".join([i for i in styles if i])
         if lblstyle:
             lblstyle = '[' + lblstyle + ']'
-        s = "  \draw (%sbp,%sbp) node%s {%s};\n" % (smart_float(x), smart_float(y), lblstyle, text)
+        s = r"  \draw (%sbp,%sbp) node%s {%s};\n" % (smart_float(x), smart_float(y), lblstyle, text)
         return s
 
     def draw_bezier(self, drawop, style=None):
@@ -349,7 +349,7 @@ class Dot2PGFConv(DotConvBase):
 
         pstrs = ["%s .. controls %s and %s " % p for p in nsplit(pp, 3)]
         stylestr = ''
-        s += "  \draw%s %s .. %s;\n" % (stylestr, " .. ".join(pstrs), pp[-1])
+        s += r"  \draw%s %s .. %s;\n" % (stylestr, " .. ".join(pstrs), pp[-1])
         return s
 
     def do_edges(self):
@@ -442,12 +442,12 @@ class Dot2PGFConv(DotConvBase):
             src = pp[0]
             dst = pp[-1]
             if topath:
-                s += "  \draw [%s] %s to[%s]%s %s;\n" % (stylestr, src,
+                s += r"  \draw [%s] %s to[%s]%s %s;\n" % (stylestr, src,
                                                          topath, extra, dst)
             elif not self.options.get('straightedges'):
-                s += "  \draw [%s] %s ..%s %s;\n" % (stylestr, " .. ".join(pstrs), extra, pp[-1])
+                s += r"  \draw [%s] %s ..%s %s;\n" % (stylestr, " .. ".join(pstrs), extra, pp[-1])
             else:
-                s += "  \draw [%s] %s --%s %s;\n" % (stylestr, pp[0], extra, pp[-1])
+                s += r"  \draw [%s] %s --%s %s;\n" % (stylestr, pp[0], extra, pp[-1])
 
         return s
 
@@ -688,9 +688,9 @@ class Dot2TikZConv(Dot2PGFConv):
                            bold='very thick', filled='fill', invis="", invisible="",
                            rounded='rounded corners', )
         self.dashstyles = dict(
-            dashed='\pgfsetdash{{3pt}{3pt}}{0pt}',
-            dotted='\pgfsetdash{{\pgflinewidth}{2pt}}{0pt}',
-            bold='\pgfsetlinewidth{1.2pt}')
+            dashed=r'\pgfsetdash{{3pt}{3pt}}{0pt}',
+            dotted=r'\pgfsetdash{{\pgflinewidth}{2pt}}{0pt}',
+            bold=r'\pgfsetlinewidth{1.2pt}')
 
     def set_options(self):
         Dot2PGFConv.set_options(self)
@@ -718,7 +718,7 @@ class Dot2TikZConv(Dot2PGFConv):
         s = ""
         if ccolor.startswith('{'):
             # rgb or hsb
-            s += "  \definecolor{%s}%s\n" % (colorname, ccolor)
+            s += r"  \definecolor{%s}%s\n" % (colorname, ccolor)
             cname = colorname
         else:
             cname = color
@@ -935,13 +935,13 @@ class Dot2TikZConv(Dot2PGFConv):
                     extra = " node%s {%s}" % (lblstyle, edgelabel)
 
             if topath:
-                s += "  \draw [%s] (%s) to[%s]%s (%s);\n" % (stylestr, src,
+                s += r"  \draw [%s] (%s) to[%s]%s (%s);\n" % (stylestr, src,
                                                              topath, extra, dst)
             elif not self.options.get('straightedges'):
-                s += "  \draw [%s] %s ..%s (%s);\n" % (stylestr,
+                s += r"  \draw [%s] %s ..%s (%s);\n" % (stylestr,
                                                        " .. ".join(pstrs), extra, dst)
             else:
-                s += "  \draw [%s] (%s) --%s (%s);\n" % (stylestr, src, extra, dst)
+                s += r"  \draw [%s] (%s) --%s (%s);\n" % (stylestr, src, extra, dst)
 
         return s
 
