@@ -37,7 +37,9 @@ __license__ = 'MIT'
 
 import argparse
 import os.path as path
-import sys, os, re
+import sys
+import os
+import re
 import logging
 
 from . import dotparsing
@@ -367,7 +369,8 @@ def main(run_as_module=False, dotdata=None, options=None):
     dotdata = "".join(lines)
 
     if options.cache and not run_as_module:
-        import hashlib, pickle
+        import hashlib
+        import pickle
 
         if options.inputfile is not None and options.outputfile:
             log.info('Caching enabled')

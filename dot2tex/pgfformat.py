@@ -248,7 +248,7 @@ class Dot2PGFConv(DotConvBase):
                     s += "  \definecolor{fillcol}%s\n" % ccolor
                     ccolor = 'fillcol'
                 s += "  \pgfsetfillcolor{%s}\n" % ccolor
-                if not opacity is None:
+                if opacity is not None:
                     self.opacity = opacity
                     # Todo: The opacity should probably be set directly when drawing
                     # The \pgfsetfillcopacity cmd affects text as well

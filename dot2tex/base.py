@@ -29,7 +29,7 @@ def create_xdot(dotdata, prog='dot', options=''):
     if progs is None:
         log.error('Could not locate Graphviz binaries')
         return None
-    if not prog in progs:
+    if prog not in progs:
         log.error('Invalid prog=%s', prog)
         raise NameError('The %s program is not recognized. Valid values are %s' % (prog, list(progs)))
 
