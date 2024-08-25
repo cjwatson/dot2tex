@@ -29,7 +29,7 @@ from collections import OrderedDict
 dot_keywords = ['graph', 'subgraph', 'digraph', 'node', 'edge', 'strict']
 
 id_re_alpha_nums = re.compile('^[_a-zA-Z][a-zA-Z0-9_]*$')
-id_re_num = re.compile('^-?(\.[0-9]+|[0-9]+(\.[0-9]*)?)$')
+id_re_num = re.compile(r'^-?(\.[0-9]+|[0-9]+(\.[0-9]*)?)$')
 id_re_with_port = re.compile('^.*:([^"]+|[^"]*\"[^"]*\"[^"]*)$')
 id_re_dbl_quoted = re.compile('^\".*\"$', re.S)
 id_re_html = re.compile('^<<.*>>$', re.S)
@@ -208,7 +208,7 @@ def find_graphviz():
             # Get the GraphViz install path from the registry
             #
             hkey = win32api.RegOpenKeyEx(win32con.HKEY_LOCAL_MACHINE,
-                                         "SOFTWARE\AT&T Research Labs\Graphviz", 0, win32con.KEY_QUERY_VALUE)
+                                         r"SOFTWARE\AT&T Research Labs\Graphviz", 0, win32con.KEY_QUERY_VALUE)
 
             path = win32api.RegQueryValueEx(hkey, "InstallPath")[0]
             win32api.RegCloseKey(hkey)
