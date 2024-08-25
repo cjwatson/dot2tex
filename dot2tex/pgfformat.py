@@ -271,7 +271,7 @@ class Dot2PGFConv(DotConvBase):
         filtered_styles = []
         for item in style.split(','):
             keyval = item.strip()
-            if keyval.find('setlinewidth') < 0 and not keyval == 'filled':
+            if keyval.find('setlinewidth') < 0 and keyval != "filled":
                 filtered_styles.append(keyval)
         return ', '.join(filtered_styles)
 
@@ -711,7 +711,7 @@ class Dot2TikZConv(Dot2PGFConv):
         res = self.convert_color(color, True)
         if len(res) == 2:
             ccolor, opacity = res
-            if not (opacity == '1'):
+            if opacity != "1":
                 log.warning('Opacity not supported yet: %s', res)
         else:
             ccolor = res

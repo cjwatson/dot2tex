@@ -534,7 +534,7 @@ class DotDataParser(object):
 
                 if isinstance(dest, tuple):
                     destport = dest[1]
-                if not (cmd == ADD_NODE_TO_GRAPH_EDGE):
+                if cmd != ADD_NODE_TO_GRAPH_EDGE:
                     if cmd == ADD_GRAPH_TO_NODE_EDGE:
                         src = subgraph
                     else:
