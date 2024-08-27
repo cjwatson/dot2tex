@@ -19,7 +19,6 @@ import logging
 import string
 
 import pyparsing
-from pyparsing import __version__ as pyparsing_version
 from pyparsing import (Literal, CaselessLiteral, Word, OneOrMore, Forward, Group, Optional, Combine, restOfLine,
                        cStyleComment, nums, alphanums,
                        ParseException, CharsNotIn, Suppress, Regex, removeQuotes)
@@ -203,7 +202,8 @@ def find_graphviz():
     #
     if os.sys.platform == 'win32':
         try:
-            import win32api, win32con
+            import win32api
+            import win32con
 
             # Get the GraphViz install path from the registry
             #
@@ -534,7 +534,7 @@ class DotDataParser(object):
 
                 if isinstance(dest, tuple):
                     destport = dest[1]
-                if not (cmd == ADD_NODE_TO_GRAPH_EDGE):
+                if cmd != ADD_NODE_TO_GRAPH_EDGE:
                     if cmd == ADD_GRAPH_TO_NODE_EDGE:
                         src = subgraph
                     else:
@@ -600,7 +600,7 @@ class DotDataParser(object):
             self.build_top_graph(tokens[0])
             return self.graph
 
-        except ParseException as err:
+        except ParseException:
             # print(err.line)
             # print(" "*(err.column-1) + "^")
             # print(err)
