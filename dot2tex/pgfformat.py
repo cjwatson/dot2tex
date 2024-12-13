@@ -301,7 +301,11 @@ class Dot2PGFConv(DotConvBase):
         pp = ['(%sbp,%sbp)' % (smart_float(p[0]), smart_float(p[1])) for p in points]
         cmd = "draw"
         if op == 'P':
-            cmd = "filldraw"
+            if self.opacity is not None:
+                # Todo: Need to know the state of the current node
+                cmd = 'filldraw [opacity=%s]' % self.opacity
+            else:
+                cmd = 'filldraw'
 
         if style:
             stylestr = " [%s]" % style
