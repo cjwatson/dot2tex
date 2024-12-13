@@ -222,6 +222,7 @@ class DotConvBase(object):
     def __init__(self, options=None):
         self.color = ""
         self.opacity = None
+        self.stroke_opacity = None
         try:
             self.template
         except AttributeError:
