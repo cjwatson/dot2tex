@@ -22,6 +22,7 @@ import pyparsing
 from pyparsing import (Literal, CaselessLiteral, Word, OneOrMore, Forward, Group, Optional, Combine, restOfLine,
                        cStyleComment, nums, alphanums,
                        ParseException, CharsNotIn, Suppress, Regex, removeQuotes)
+from pyparsing import __version__ as pyparsing_version
 
 from collections import OrderedDict
 
