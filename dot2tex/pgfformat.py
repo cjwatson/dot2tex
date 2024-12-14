@@ -236,6 +236,11 @@ class Dot2PGFConv(DotConvBase):
                     s += r"  \definecolor{strokecol}%s\n" % ccolor
                     ccolor = 'strokecol'
                 s += r"  \pgfsetstrokecolor{%s}\n" % ccolor
+                if opacity is not None:
+                    self.stroke_opacity = opacity
+                    # Todo: The opacity should probably be set directly when drawing
+                else:
+                    self.stroke_opacity = None
             else:
                 return ""
         elif c == 'C':
@@ -275,46 +280,58 @@ class Dot2PGFConv(DotConvBase):
                 filtered_styles.append(keyval)
         return ', '.join(filtered_styles)
 
+    def draw_with_opacity(self, pathstr, fill=False):
+        opacitystr = ''
+        if self.stroke_opacity is not None:
+            opacitystr = ' [opacity=%s]' % self.stroke_opacity
+        if not fill:
+            return "  \\draw%s%s;\n" % (opacitystr, pathstr)
+        if self.stroke_opacity == self.opacity:
+            return "  \\filldraw%s%s;\n" % (opacitystr, pathstr)
+        suffix = "  \\draw%s%s;\n" % (opacitystr, pathstr)
+        opacitystr = ''
+        if self.opacity is not None:
+            opacitystr = ' [opacity=%s]' % self.opacity
+        return "  \\fill%s%s;\n" % (opacitystr, pathstr) + suffix
+
     def draw_ellipse(self, drawop, style=None):
         op, x, y, w, h = drawop
-        s = ""
         if op == 'E':
-            if self.opacity is not None:
-                # Todo: Need to know the state of the current node
-                cmd = 'filldraw [opacity=%s]' % self.opacity
-            else:
-                cmd = 'filldraw'
+            should_fill = True
         else:
-            cmd = "draw"
+            should_fill = False
 
         if style:
             stylestr = " [%s]" % style
         else:
             stylestr = ''
-        s += r"  \%s%s (%sbp,%sbp) ellipse (%sbp and %sbp);\n" % (cmd, stylestr, smart_float(x), smart_float(y),
-                                                                 # w+self.linewidth,h+self.linewidth)
-                                                                 smart_float(w), smart_float(h))
-        return s
+        return self.draw_with_opacity(
+                "%s (%sbp,%sbp) ellipse (%sbp and %sbp)" % (
+                    stylestr, smart_float(x), smart_float(y),
+                    smart_float(w), smart_float(h)),
+                fill=should_fill)
 
     def draw_polygon(self, drawop, style=None):
         op, points = drawop
         pp = ['(%sbp,%sbp)' % (smart_float(p[0]), smart_float(p[1])) for p in points]
-        cmd = "draw"
         if op == 'P':
-            cmd = "filldraw"
+            should_fill = True
+        else:
+            should_fill = False
 
         if style:
             stylestr = " [%s]" % style
         else:
             stylestr = ''
-        s = r"  \%s%s %s -- cycle;\n" % (cmd, stylestr, " -- ".join(pp))
-        return s
+        return self.draw_with_opacity(
+                "%s %s -- cycle" % (stylestr, " -- ".join(pp)),
+                fill=should_fill)
 
     def draw_polyline(self, drawop, style=None):
         op, points = drawop
         pp = ['(%sbp,%sbp)' % (smart_float(p[0]), smart_float(p[1])) for p in points]
         stylestr = ''
-        return r"  \draw%s %s;\n" % (stylestr, " -- ".join(pp))
+        return self.draw_with_opacity("%s %s" % (stylestr, " -- ".join(pp)))
 
     def draw_text(self, drawop, style=None):
         # The coordinates given by drawop are not the same as the node
@@ -338,6 +355,7 @@ class Dot2PGFConv(DotConvBase):
         if lblstyle:
             lblstyle = '[' + lblstyle + ']'
         s = r"  \draw (%sbp,%sbp) node%s {%s};\n" % (smart_float(x), smart_float(y), lblstyle, text)
+        # TODO should opacity be applied here?
         return s
 
     def draw_bezier(self, drawop, style=None):
@@ -349,8 +367,8 @@ class Dot2PGFConv(DotConvBase):
 
         pstrs = ["%s .. controls %s and %s " % p for p in nsplit(pp, 3)]
         stylestr = ''
-        s += r"  \draw%s %s .. %s;\n" % (stylestr, " .. ".join(pstrs), pp[-1])
-        return s
+        return self.draw_with_opacity(
+                "%s %s .. %s" % (stylestr, " .. ".join(pstrs), pp[-1]))
 
     def do_edges(self):
         s = ""
